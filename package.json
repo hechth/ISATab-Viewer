@@ -1,0 +1,52 @@
+{
+  "name": "isatab-viewer",
+  "version": "2.0.0",
+  "description": "A modern viewer for ISA-Tab files",
+  "type": "module",
+  "main": "dist/isatab-viewer.umd.cjs",
+  "module": "dist/isatab-viewer.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/isatab-viewer.js",
+      "require": "./dist/isatab-viewer.umd.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "styles"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write 'src/**/*.js' '*.js'"
+  },
+  "keywords": [
+    "isa-tab",
+    "bioinformatics",
+    "metadata",
+    "viewer"
+  ],
+  "author": "ISA team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ISA-tools/ISATab-Viewer.git"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint": "^9.17.0",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
+    "vite": "^6.0.6",
+    "vitest": "^2.1.8"
+  }
+}

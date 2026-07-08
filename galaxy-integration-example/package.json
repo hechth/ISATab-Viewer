@@ -1,0 +1,17 @@
+{
+  "name": "@galaxyproject/isatab-viewer",
+  "version": "1.0.0",
+  "description": "ISATab Viewer integration for Galaxy",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "isatab-viewer": "^2.0.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.6"
+  }
+}

@@ -1,0 +1,635 @@
+/**
+ * ISATab Viewer - Modern CSS Styles
+ *
+ * Modernized styles replacing the legacy clearfix hacks and IE6/7 workarounds.
+ */
+
+/* ============================================
+   Base Styles
+   ============================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #35495e;
+  background-color: #fff;
+}
+
+a {
+  color: #26b99a;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+a:hover {
+  color: #35495e;
+  text-decoration: underline;
+}
+
+/* ============================================
+   Clearfix (Modern Approach)
+   ============================================ */
+
+.cf::before,
+.cf::after {
+  content: "";
+  display: table;
+}
+
+.cf::after {
+  clear: both;
+}
+
+/* ============================================
+   Layout Components
+   ============================================ */
+
+.toolbar {
+  width: 100%;
+  padding: 15px;
+  background-color: #f1f2f1;
+  border-bottom: 1px solid #ddd;
+}
+
+.toolbar select {
+  font-size: 14px;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.toolbar select:focus {
+  outline: none;
+  border-color: #26b99a;
+}
+
+.isa-view {
+  min-height: 100vh;
+}
+
+/* Use flexbox for side-by-side layout */
+.isa-study-list {
+  float: left;
+  width: 25%;
+  padding: 15px;
+  background-color: #fafafa;
+  border-right: 1px solid #e0e0e0;
+  min-height: calc(100vh - 100px);
+}
+
+.isa-main-view {
+  float: left;
+  width: 75%;
+  padding: 20px;
+  overflow-x: auto;
+}
+
+/* Clearfix after the two columns */
+.isa-view::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* ============================================
+   Study List
+   ============================================ */
+
+.isa-study-list h3 {
+  margin-top: 0;
+  font-size: 1.2em;
+  text-transform: uppercase;
+  color: #35495e;
+}
+
+.isa-study-list ul,
+.isa-study-list dl {
+  margin: 0;
+  padding: 0;
+}
+
+.isa-study-list li {
+  list-style: none;
+  padding: 8px 12px;
+  margin: 4px 0;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.isa-study-list li:hover,
+.isa-study-list li.active {
+  background-color: #26b99a;
+  color: #fff;
+}
+
+.isa-study-list dd {
+  margin-left: 0;
+}
+
+/* ============================================
+   Breadcrumbs
+   ============================================ */
+
+.isa-breadcrumbs {
+  margin-bottom: 20px;
+}
+
+.isa-breadcrumbs ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.isa-breadcrumbs li {
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.isa-breadcrumbs li:hover:not(.active) {
+  background-color: #f1f2f1;
+}
+
+.isa-breadcrumbs li.active {
+  cursor: default;
+  color: #35495e;
+}
+
+/* ============================================
+   Study Info View
+   ============================================ */
+
+#study-info {
+  padding: 10px;
+}
+
+#study-id {
+  color: #26b99a;
+  font-size: 1.5em;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+#study-id {
+  color: #26b99a;
+  font-size: 1.5em;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+#study-title,
+#investigation-title {
+  font-size: 1.4em;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+#study-description,
+#investigation-description {
+  font-size: 1em;
+  text-align: justify;
+  margin-bottom: 20px;
+}
+
+.section-header {
+  color: #26b99a;
+  font-size: 1.2em;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* ============================================
+   Sample Distribution
+   ============================================ */
+
+#sample-distribution {
+  margin: 15px 0;
+}
+
+#sample_stats {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#sample_stats li {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.characteristic_type {
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.distribution-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 4px 0;
+}
+
+.distribution {
+  flex: 1;
+}
+
+.distribution-value {
+  flex-shrink: 0;
+  width: 40px;
+  text-align: center;
+}
+
+.distribution-value span {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: #26b99a;
+  color: #fff;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+/* ============================================
+   Assays Section
+   ============================================ */
+
+#assays ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+#assays ul li {
+  width: 250px;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  text-align: center;
+  background-color: #fafafa;
+}
+
+.measurement-type,
+.technology-type,
+.data-file {
+  font-weight: 700;
+  font-size: 1em;
+  margin: 8px 0;
+}
+
+.technology-platform {
+  color: #888;
+  font-size: 0.9em;
+  margin: 4px 0;
+}
+
+.assay-file-name {
+  font-size: 0.85em;
+  color: #666;
+  word-break: break-all;
+}
+
+/* Assay Icons */
+.assay-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 10px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.assay-icon-genomics {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2326b99a' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/%3E%3C/svg%3E");
+}
+
+.assay-icon-proteomics {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2326b99a' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E");
+}
+
+.assay-icon-metabolomics {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2326b99a' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z'/%3E%3C/svg%3E");
+}
+
+.assay-icon-chemistry {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2326b99a' d='M7 2v2h10V2H7zm0 4v2.29c0 2.16-.97 4.55-2.65 6.71C3.95 15.5 3 17.5 3 20h18c0-2.5-.95-4.5-1.35-5-1.68-2.16-2.65-4.55-2.65-6.71V6H7z'/%3E%3C/svg%3E");
+}
+
+.assay-icon-transcriptomics {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2326b99a' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
+}
+
+/* ============================================
+   Publications, Protocols, Factors, Contacts
+   ============================================ */
+
+#samples,
+#assays {
+  width: 48%;
+  float: left;
+  text-align: justify;
+  padding-right: 20px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+#samples {
+  margin-right: 2%;
+}
+
+#publications,
+#protocols,
+#factors,
+#contacts {
+  width: 31%;
+  float: left;
+  text-align: justify;
+  padding-right: 15px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+#publications ul,
+#protocols ul,
+#factors ul,
+#contacts ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#publications ul li {
+  float: none;
+  width: auto;
+  margin-right: 0;
+  margin-bottom: 15px;
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
+}
+
+.publication-title {
+  font-weight: 700;
+  font-size: 1em;
+  margin: 0 0 5px 0;
+}
+
+.publication-authors {
+  font-size: 0.9em;
+  color: #666;
+  margin: 5px 0;
+}
+
+.publication-pubmedid,
+.publication-doi {
+  font-size: 0.85em;
+  color: #888;
+  margin: 3px 0;
+}
+
+.protocol-name,
+.contact-name {
+  font-weight: 700;
+  margin: 0 0 5px 0;
+}
+
+.protocol-description {
+  font-size: 0.9em;
+  color: #666;
+  max-height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contact-address,
+.contact-affiliation {
+  font-size: 0.85em;
+  color: #888;
+  margin: 3px 0;
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+
+.btn {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.btn-green {
+  background-color: #26b99a;
+  color: #fff;
+}
+
+.btn-green:hover {
+  background-color: #1d9a7f;
+  text-decoration: none;
+}
+
+/* ============================================
+   Tables
+   ============================================ */
+
+.isa-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 0.9em;
+}
+
+.isa-table th,
+.isa-table td {
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  text-align: left;
+}
+
+.isa-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+
+.isa-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.isa-table tbody tr:hover {
+  background-color: #f0f0f0;
+}
+
+/* ============================================
+   Error States
+   ============================================ */
+
+.error {
+  color: #d32f2f;
+  padding: 15px;
+  background-color: #ffebee;
+  border-radius: 4px;
+  border-left: 4px solid #d32f2f;
+}
+
+/* ============================================
+   Loading State
+   ============================================ */
+
+.loading {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+#study-info p {
+  padding: 15px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
+
+#study-info p.error {
+  color: #d32f2f;
+  background-color: #ffebee;
+  border-left: 4px solid #d32f2f;
+}
+
+/* ============================================
+   Development Info Panel
+   ============================================ */
+
+.info-panel {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 25px;
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.info-panel h2 {
+  margin-top: 0;
+  color: #26b99a;
+}
+
+.info-panel h3 {
+  margin-top: 20px;
+  font-size: 1.1em;
+  color: #35495e;
+}
+
+.info-panel pre {
+  background-color: #2d2d2d;
+  color: #f8f8f2;
+  padding: 15px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 13px;
+}
+
+.info-panel code {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+.info-panel ul,
+.info-panel ol {
+  line-height: 1.8;
+}
+
+.instructions a {
+  cursor: pointer;
+}
+
+.load-dataset {
+  color: #26b99a;
+  font-weight: 600;
+}
+
+.load-dataset:hover {
+  color: #35495e;
+  text-decoration: underline;
+}
+
+.info-panel h2 {
+  margin-top: 0;
+  color: #26b99a;
+}
+
+.info-panel h3 {
+  margin-top: 20px;
+  font-size: 1.1em;
+  color: #35495e;
+}
+
+.info-panel pre {
+  background-color: #2d2d2d;
+  color: #f8f8f2;
+  padding: 15px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 13px;
+}
+
+.info-panel code {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+.info-panel ul,
+.info-panel ol {
+  line-height: 1.8;
+}
+
+.instructions a {
+  cursor: pointer;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 768px) {
+  .isa-study-list {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .isa-main-view {
+    padding: 15px;
+  }
+
+  #assays ul {
+    flex-direction: column;
+  }
+
+  #assays ul li {
+    width: 100%;
+  }
+
+  #publications ul li {
+    width: 100%;
+  }
+}

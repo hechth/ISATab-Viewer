@@ -56,3 +56,15 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vite
+.vite/
+
+# Build output
+dist/
+build/
