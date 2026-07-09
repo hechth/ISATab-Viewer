@@ -68,9 +68,62 @@ window.loadSelectedDataset = async function() {
   }
 };
 
+/**
+ * Setup resizable sidebar
+ */
+function setupResizableSidebar() {
+  const resizeHandle = document.getElementById('resize-handle');
+  const studyListPanel = document.getElementById('study-list-panel');
+  const mainViewPanel = document.getElementById('main-view-panel');
+
+  if (!resizeHandle || !studyListPanel || !mainViewPanel) return;
+
+  let isResizing = false;
+
+  // Set initial positions
+  function updateLayout() {
+    const studyListWidth = parseFloat(studyListPanel.style.width) || 25;
+    mainViewPanel.style.marginLeft = `${studyListWidth + 0.6}%`; // Account for resize handle width
+  }
+  updateLayout();
+
+  resizeHandle.addEventListener('mousedown', (e) => {
+    isResizing = true;
+    resizeHandle.classList.add('resizing');
+    document.body.style.userSelect = 'none';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isResizing) return;
+
+    const container = document.getElementById('investigation_file');
+    const containerRect = container.getBoundingClientRect();
+    const newWidth = ((e.clientX - containerRect.left) / containerRect.width) * 100;
+
+    // Enforce min/max width
+    if (newWidth >= 15 && newWidth <= 50) {
+      studyListPanel.style.width = `${newWidth}%`;
+      mainViewPanel.style.marginLeft = `${newWidth + 0.6}%`; // Account for resize handle width
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (isResizing) {
+      isResizing = false;
+      resizeHandle.classList.remove('resizing');
+      document.body.style.userSelect = '';
+    }
+  });
+}
+
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', () => {
+    init();
+    setupResizableSidebar();
+  });
 } else {
   init();
+  setupResizableSidebar();
 }

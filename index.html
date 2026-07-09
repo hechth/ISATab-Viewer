@@ -32,12 +32,12 @@
     </div>
   </div>
 
-  <div class="isa-study-list">
+  <div class="isa-study-list" id="study-list-panel">
     <h3>STUDIES</h3>
     <ul id="study-list"></ul>
   </div>
-
-  <div class="isa-main-view">
+  <div class="isa-resize-handle" id="resize-handle"></div>
+  <div class="isa-main-view" id="main-view-panel">
     <div class="isa-breadcrumbs">
       <ul id="isa-breadcrumb-items"></ul>
     </div>
@@ -77,7 +77,6 @@
 
 <!-- Study List Template -->
 <script id="study-list-template" type="text/x-handlebars-template">
-  <h3>STUDIES</h3>
   <ul>
     {{#each studies}}
     <li id="list-{{this.hash}}" onclick="ISATabViewer.rendering.render_study('{{this.id}}', '{{this.hash}}')">

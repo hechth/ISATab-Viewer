@@ -75,21 +75,55 @@ a:hover {
   min-height: 100vh;
 }
 
-/* Use flexbox for side-by-side layout */
+/* Clearfix after toolbar */
+.toolbar::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Use float for side-by-side layout with resizable sidebar */
 .isa-study-list {
   float: left;
   width: 25%;
+  min-width: 150px;
+  max-width: 50%;
   padding: 15px;
   background-color: #fafafa;
-  border-right: 1px solid #e0e0e0;
   min-height: calc(100vh - 100px);
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.isa-resize-handle {
+  float: left;
+  width: 6px;
+  height: calc(100vh - 100px);
+  cursor: col-resize;
+  background-color: #e0e0e0;
+  transition: background-color 0.2s;
+  z-index: 10;
+}
+
+.isa-resize-handle:hover,
+.isa-resize-handle.resizing {
+  background-color: #26b99a;
 }
 
 .isa-main-view {
-  float: left;
-  width: 75%;
+  float: none;
+  margin-left: 25%; /* Default, will be overridden by JS */
   padding: 20px;
   overflow-x: auto;
+  min-height: calc(100vh - 100px);
+  box-sizing: border-box;
+}
+
+/* Clearfix after the columns */
+.isa-view::after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 /* Clearfix after the two columns */
@@ -411,9 +445,9 @@ a:hover {
 .protocol-description {
   font-size: 0.9em;
   color: #666;
-  max-height: 40px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  min-height: 40px;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .contact-address,

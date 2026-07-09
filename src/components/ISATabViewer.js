@@ -57,36 +57,40 @@ async function process_file(file_name, file_contents, placement) {
   // Store placement for later use
   currentPlacement = placement;
 
-  render_study_list(placement);
+  // Load all files asynchronously
+  const loadPromises = [];
 
-  // Load study files asynchronously
   for (const study_index in investigation.STUDY) {
     const study_information = investigation.STUDY[study_index];
     const study_file = study_information.STUDY['Study File Name']?.[0]?.replace(/"/g, '');
     const base_directory = file_name.substring(0, file_name.lastIndexOf('/') + 1);
 
+    // Load study file
     if (study_file) {
-      try {
-        const response = await fetch(base_directory + study_file);
-        if (response.ok) {
-          const study_file_contents = await response.text();
-          spreadsheets[study_file] = process_assay_file(study_file, study_file_contents);
-          const processed_characteristics = spreadsheets[study_file].stats;
+      const loadPromise = (async () => {
+        try {
+          const response = await fetch(base_directory + study_file);
+          if (response.ok) {
+            const study_file_contents = await response.text();
+            spreadsheets[study_file] = process_assay_file(study_file, study_file_contents);
+            const processed_characteristics = spreadsheets[study_file].stats;
 
-          // Update sample distribution if element exists
-          if (exists('#sample-distribution')) {
-            const sample_stats = process_study_sample_statistics(processed_characteristics);
-            const source = $('#sample-distribution-template')?.innerHTML;
-            if (source) {
-              const template = Handlebars.compile(source);
-              const html = template({ sample_stats: sample_stats });
-              setHtml('#sample-distribution', html);
+            // Update sample distribution if element exists
+            if (exists('#sample-distribution')) {
+              const sample_stats = process_study_sample_statistics(processed_characteristics);
+              const source = $('#sample-distribution-template')?.innerHTML;
+              if (source) {
+                const template = Handlebars.compile(source);
+                const html = template({ sample_stats: sample_stats });
+                setHtml('#sample-distribution', html);
+              }
             }
           }
+        } catch (error) {
+          console.warn(`Could not load study file ${study_file}:`, error.message);
         }
-      } catch (error) {
-        console.warn(`Could not load study file ${study_file}:`, error.message);
-      }
+      })();
+      loadPromises.push(loadPromise);
     }
 
     // Load assay files
@@ -94,23 +98,31 @@ async function process_file(file_name, file_contents, placement) {
     for (const assay of assays) {
       const assay_file_name = assay['Study Assay File Name'];
       if (assay_file_name) {
-        try {
-          const full_url = base_directory + assay_file_name;
-          const response = await fetch(full_url);
-          if (response.ok) {
-            const file_contents = await response.text();
-            process_assay_file(assay_file_name, file_contents);
-          } else {
-            console.warn(`HTTP error ${response.status} for ${assay_file_name}`);
+        const loadPromise = (async () => {
+          try {
+            const full_url = base_directory + assay_file_name;
+            const response = await fetch(full_url);
+            if (response.ok) {
+              const file_contents = await response.text();
+              process_assay_file(assay_file_name, file_contents);
+            } else {
+              console.warn(`HTTP error ${response.status} for ${assay_file_name}`);
+            }
+          } catch (error) {
+            console.warn(`Could not load assay file ${assay_file_name}:`, error.message);
           }
-        } catch (error) {
-          console.warn(`Could not load assay file ${assay_file_name}:`, error.message);
-        }
+        })();
+        loadPromises.push(loadPromise);
       }
     }
   }
 
+  // Wait for all files to load before rendering
+  await Promise.all(loadPromises);
   isLoadingData = false;
+
+  render_study_list(placement);
+
   return investigation;
 }
 
@@ -574,7 +586,8 @@ function render_assay(study_id, study_id_hash, file_name) {
       const loadingHtml = `<div class="loading"><p>Loading data for "${file_name}"...</p><p>Please wait a moment and click the button again.</p></div>`;
       setHtml('#study-info', loadingHtml);
     } else {
-      const errorHtml = `<div class="error"><p class="error">Data for "${file_name}" could not be loaded.</p><p>The file may not exist or there was an error fetching it.</p></div>`;
+      const availableFiles = Object.keys(spreadsheets).length > 0 ? Object.keys(spreadsheets).join(', ') : 'none';
+      const errorHtml = `<div class="error"><p class="error">Data for "${file_name}" could not be loaded.</p><p>Available files: ${availableFiles}</p></div>`;
       setHtml('#study-info', errorHtml);
     }
     return;
