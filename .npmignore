@@ -1,0 +1,9 @@
+# Ignore everything by default
+*
+
+# Include only these files/directories
+!/dist/
+!/README.md
+!/LICENSE
+!/CHANGELOG.md
+!/package.json
