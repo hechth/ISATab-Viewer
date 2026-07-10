@@ -67,13 +67,18 @@ async function process_file(file_name, file_contents, placement) {
 
     // Load study file
     if (study_file) {
+      console.log('Loading study file:', study_file, 'from URL:', base_directory + study_file);
       const loadPromise = (async () => {
         try {
           const response = await fetch(base_directory + study_file);
+          console.log('Study file response status:', response.status);
           if (response.ok) {
             const study_file_contents = await response.text();
-            spreadsheets[study_file] = process_assay_file(study_file, study_file_contents);
-            const processed_characteristics = spreadsheets[study_file].stats;
+            console.log('Study file content length:', study_file_contents.length);
+            const result = process_assay_file(study_file, study_file_contents);
+            spreadsheets[study_file] = result;
+            console.log('Study file loaded, spreadsheets now has keys:', Object.keys(spreadsheets));
+            const processed_characteristics = result.stats;
 
             // Update sample distribution if element exists
             if (exists('#sample-distribution')) {
@@ -104,7 +109,8 @@ async function process_file(file_name, file_contents, placement) {
             const response = await fetch(full_url);
             if (response.ok) {
               const file_contents = await response.text();
-              process_assay_file(assay_file_name, file_contents);
+              const result = process_assay_file(assay_file_name, file_contents);
+              spreadsheets[assay_file_name] = result;
             } else {
               console.warn(`HTTP error ${response.status} for ${assay_file_name}`);
             }
@@ -228,7 +234,12 @@ function process_assay_file(file_name, file_contents) {
     count++;
   }
 
-  return characteristics;
+  // Return the full spreadsheet data including headers, rows, and stats
+  return {
+    headers: spreadsheets[file_name].headers,
+    rows: spreadsheets[file_name].rows,
+    stats: characteristics
+  };
 }
 
 /**
@@ -428,13 +439,17 @@ function render_study(study_id, study_id_hash) {
     return;
   }
 
+  const study_file_value = study.STUDY['Study File Name']?.[0]?.replace(/"/g, '');
+  console.log('render_study: study_file value from investigation:', study_file_value);
+  console.log('render_study: spreadsheets has key?', !!spreadsheets[study_file_value]);
+
   const study_data = {
     study_id,
     study_id_hash,
     study_id_display: study.STUDY['Study Identifier']?.[0]?.replace(/"/g, ''),
     study_title: study.STUDY['Study Title']?.[0]?.replace(/"/g, ''),
     study_description: study.STUDY['Study Description']?.[0]?.replace(/"/g, ''),
-    study_file: study.STUDY['Study File Name']?.[0]?.replace(/"/g, ''),
+    study_file: study_file_value,
     publications: generate_records(study, 'STUDY PUBLICATIONS'),
     protocols: generate_records(study, 'STUDY PROTOCOLS'),
     contacts: generate_records(study, 'STUDY CONTACTS'),
@@ -575,6 +590,12 @@ function getDefaultStudyTemplate() {
  * Render an assay table
  */
 function render_assay(study_id, study_id_hash, file_name) {
+  console.log('=== render_assay DEBUG ===');
+  console.log('file_name passed:', file_name);
+  console.log('All spreadsheets keys:', Object.keys(spreadsheets));
+  console.log('spreadsheet data:', spreadsheets[file_name]);
+  console.log('========================');
+
   setHtml('.isa-breadcrumb-items', `
     <li onclick="ISATabViewer.rendering.render_study('${study_id}', '${study_id_hash}')">${study_id}</li>
     <li class="active">${file_name}</li>
