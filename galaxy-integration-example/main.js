@@ -1,8 +1,8 @@
 /**
- * Galaxy Integration Example for ISATab Viewer
+ * Galaxy Integration for ISATab Viewer
  *
- * This example shows how to integrate the ISATab Viewer into Galaxy
- * as an interactive visualization, similar to how tabulator is integrated.
+ * This module integrates the ISATab Viewer into Galaxy as an interactive visualization,
+ * similar to how tabulator is integrated into Galaxy visualizations.
  *
  * Directory structure for Galaxy visualization package:
  *
@@ -14,15 +14,11 @@
  */
 
 import './main.css';
-import ISATabViewer from 'isatab-viewer';
 
-// Configuration thresholds
-const DATA_LIMIT = 10000; // Maximum rows to load initially
-
-// Access container element
+// Access container element - Galaxy provides this
 const appElement = document.querySelector('#app');
 
-// Development mode mock data
+// Development mode mock data (for local testing without Galaxy)
 if (import.meta.env.DEV) {
     const dataIncoming = {
         root: '/',
@@ -35,6 +31,7 @@ if (import.meta.env.DEV) {
 }
 
 // Parse incoming configuration from Galaxy
+// Galaxy injects this data via the dataset.incoming attribute
 const incoming = JSON.parse(appElement.dataset.incoming || '{}');
 const datasetId = incoming.visualization_config?.dataset_id;
 const root = incoming.root || '/';
@@ -62,7 +59,7 @@ function hideMessage() {
 }
 
 /**
- * Fetch ISA-TAB dataset from Galaxy API
+ * Fetch ISA-TAB dataset metadata from Galaxy API
  */
 async function fetchDataset(id) {
     try {
@@ -79,6 +76,7 @@ async function fetchDataset(id) {
 
 /**
  * Fetch raw file content from Galaxy
+ * For ISA-Tab, we need the investigation file content
  */
 async function fetchFileContent(id) {
     try {
@@ -96,6 +94,11 @@ async function fetchFileContent(id) {
 
 /**
  * Initialize the ISATab viewer with Galaxy dataset
+ *
+ * Note: This expects the dataset to be the investigation file (i_*.txt).
+ * For full ISA-Tab visualization with studies and assays, the dataset
+ * should be a zipped archive containing all ISA files, or you need to
+ * configure Galaxy to provide access to related files.
  */
 async function init() {
     if (!datasetId) {
@@ -113,8 +116,8 @@ async function init() {
 
     // Check if this is a valid ISA-TAB file
     const fileType = dataset.file_type || dataset.extension;
-    if (!['isatab', 'txt'].includes(fileType)) {
-        showMessage('Warning', `Expected ISA-TAB file, got: ${fileType}`);
+    if (!['isatab', 'txt', 'tabular'].includes(fileType)) {
+        showMessage('Warning', `Expected ISA-TAB file, got: ${fileType}. Attempting to load anyway...`);
     }
 
     // Fetch file content
@@ -123,21 +126,28 @@ async function init() {
         return;
     }
 
-    // Check file size
-    if (content.length > DATA_LIMIT) {
-        showMessage('Note', `Large file detected (${content.length} bytes). Some features may be limited.`);
+    // Wait for ISATabViewer to be available (loaded as global script)
+    // In production, the ISATabViewer library should be loaded before this script
+    const maxAttempts = 50;
+    let attempts = 0;
+
+    while (!window.ISATabViewer && attempts < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        attempts++;
+    }
+
+    if (!window.ISATabViewer) {
+        showMessage('Error', 'ISATabViewer library not loaded. Please check your installation.');
+        return;
     }
 
     // Parse and render
     try {
-        // Create viewer instance
-        const viewer = new ISATabViewer({
-            container: '#viewer-container',
-            separator: '\t'
-        });
-
-        // Process the investigation file content
-        viewer.processFile(`galaxy://${datasetId}`, content, '#viewer-container');
+        // Process the investigation file content using the global API
+        await window.ISATabViewer.rendering.render_isatab_from_file(
+            `galaxy://${datasetId}`,
+            '#viewer-container'
+        );
 
         hideMessage();
         console.log('[isatab-viewer] Visualization ready');

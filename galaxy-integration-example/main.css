@@ -22,7 +22,5 @@
   overflow: auto;
 }
 
-/* Override some viewer styles for Galaxy integration */
-.isa-view {
-  min-height: 100%;
-}
+/* Import the ISATab Viewer styles */
+@import url('https://cdn.jsdelivr.net/npm/isatab-viewer@latest/dist/isatab-viewer.css');
